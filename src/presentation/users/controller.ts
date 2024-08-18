@@ -20,4 +20,11 @@ export class UserController {
             })
             .catch( error => CustomError.handleError( error, res ));
     };
+
+    public getUsers = ( req: Request, res: Response ) => {
+
+        this.userService.getUsers()
+            .then( users => res.status(200).json( users ))
+            .catch( error => CustomError.handleError( error, res ));
+    }
 }

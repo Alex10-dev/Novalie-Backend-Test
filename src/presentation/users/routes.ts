@@ -11,6 +11,7 @@ export class UserRoutes {
         const userController = new UserController( userService );
 
         router.post('/', userController.createUser);
+        router.get('/', userController.getUsers);
         
         return router;
     }
