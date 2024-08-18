@@ -27,4 +27,15 @@ export class UserController {
             .then( users => res.status(200).json( users ))
             .catch( error => CustomError.handleError( error, res ));
     }
+
+    public getUserByID = ( req: Request, res: Response ) => {
+        const { id } = req.params;
+
+        this.userService.getUserByID( Number(id) )
+            .then( user => {
+                const { password, ...userInfo } = user;
+                return res.status(200).json( userInfo );
+            })
+            .catch( error => CustomError.handleError( error, res ));
+    } 
 }

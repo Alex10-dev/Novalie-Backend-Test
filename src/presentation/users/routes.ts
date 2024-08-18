@@ -12,6 +12,7 @@ export class UserRoutes {
 
         router.post('/', userController.createUser);
         router.get('/', userController.getUsers);
+        router.get('/:id', userController.getUserByID)
         
         return router;
     }

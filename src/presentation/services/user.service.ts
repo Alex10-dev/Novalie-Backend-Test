@@ -46,4 +46,22 @@ export class UserService {
             throw CustomError.internalServer('Internal Server Error');
         }
     }
+
+    async getUserByID( userID: number ) {
+        try {
+            const user = await prisma.user.findFirst({
+                where: { id: userID }
+            });
+
+            if( !user ) throw CustomError.badRequest(`User with ID: ${ userID } doesn't exist`);
+
+            return UserEntity.fromObject( user );
+
+        } catch( error ) {
+            throw error instanceof CustomError
+            ? error
+            : CustomError.internalServer('Internal Server Error');
+            
+        }
+    }
 }
