@@ -1,8 +1,10 @@
-import { info } from "console";
+
 import { prisma } from "../../data";
 import { CreateUserDTO } from "../../domain/dtos/create-user.dto";
 import { UserEntity } from "../../domain/entities/user.entity";
 import { CustomError } from "../../domain/errors/custom.error";
+import { PaginationDTO } from "../../domain/dtos/pagination.dto";
+import { userInfo } from "os";
 
 export class UserService {
 
@@ -33,14 +35,28 @@ export class UserService {
         }
     }
 
-    async getUsers() {
-        try {
-            const users = await prisma.user.findMany();
+    async getUsers( pagination: PaginationDTO ) {
 
-            return  users.map( user => {
-                const { password, ...info } = user;
-                return { ...info };
-            })
+        const skip = (pagination.page - 1) * (pagination.limit);
+        try {
+
+            const [total, users] = await Promise.all([
+                await prisma.user.count(),
+                await prisma.user.findMany({
+                    skip: skip,
+                    take: pagination.limit,
+                }),
+            ]);
+
+            return {
+                page: pagination.page,
+                limit: pagination.limit,
+                total,
+                users: users.map( user => {
+                    const { password, ...userInfo } = UserEntity.fromObject( user );
+                    return { ...userInfo };
+                })
+            }
 
         } catch( error ) {
             throw CustomError.internalServer('Internal Server Error');

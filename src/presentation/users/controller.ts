@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CreateUserDTO } from "../../domain/dtos/create-user.dto";
 import { UserService } from "../services/user.service";
 import { CustomError } from "../../domain/errors/custom.error";
+import { PaginationDTO } from "../../domain/dtos/pagination.dto";
 
 export class UserController {
 
@@ -23,7 +24,11 @@ export class UserController {
 
     public getUsers = ( req: Request, res: Response ) => {
 
-        this.userService.getUsers()
+        const {page = 1, limit = 10} = req.query;
+        const [error, paginationDTO] = PaginationDTO.create( Number(page), Number(limit) );
+        if( error ) return res.status(400).json({ error });
+
+        this.userService.getUsers( paginationDTO! )
             .then( users => res.status(200).json( users ))
             .catch( error => CustomError.handleError( error, res ));
     }
