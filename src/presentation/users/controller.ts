@@ -3,6 +3,7 @@ import { CreateUserDTO } from "../../domain/dtos/create-user.dto";
 import { UserService } from "../services/user.service";
 import { CustomError } from "../../domain/errors/custom.error";
 import { PaginationDTO } from "../../domain/dtos/pagination.dto";
+import { UpdateUserDTO } from "../../domain/dtos/update-user.dto";
 
 export class UserController {
 
@@ -42,5 +43,19 @@ export class UserController {
                 return res.status(200).json( userInfo );
             })
             .catch( error => CustomError.handleError( error, res ));
-    } 
+    }
+
+    public updateUser = ( req: Request, res: Response ) => {
+
+        // const {id} = req.params;
+
+        const [ error, updateUserDTO ] = UpdateUserDTO.create( req.body );
+        if( error ) return res.status(400).json({ error });
+
+        console.log(updateUserDTO!);
+
+        res.json({
+            message: "Update user"
+        })
+    }
 }
