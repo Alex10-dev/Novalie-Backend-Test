@@ -47,15 +47,14 @@ export class UserController {
 
     public updateUser = ( req: Request, res: Response ) => {
 
-        // const {id} = req.params;
+        const {id} = req.params;
 
         const [ error, updateUserDTO ] = UpdateUserDTO.create( req.body );
         if( error ) return res.status(400).json({ error });
 
-        console.log(updateUserDTO!);
+        this.userService.updateUser( Number(id), updateUserDTO! )
+            .then( updatedUser => res.status(200).json( updatedUser ))
+            .catch( error => CustomError.handleError( error, res ));
 
-        res.json({
-            message: "Update user"
-        })
     }
 }

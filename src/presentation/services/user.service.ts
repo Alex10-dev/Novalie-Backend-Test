@@ -5,6 +5,7 @@ import { UserEntity } from "../../domain/entities/user.entity";
 import { CustomError } from "../../domain/errors/custom.error";
 import { PaginationDTO } from "../../domain/dtos/pagination.dto";
 import { userInfo } from "os";
+import { UpdateUserDTO } from "../../domain/dtos/update-user.dto";
 
 export class UserService {
 
@@ -78,6 +79,23 @@ export class UserService {
             ? error
             : CustomError.internalServer('Internal Server Error');
             
+        }
+    }
+
+    async updateUser( userID: number, updateUserDTO: UpdateUserDTO ){
+
+        await this.getUserByID( userID );
+
+        try{
+            const updatedUser = await prisma.user.update({
+                where: { id: userID },
+                data: { ...updateUserDTO.getDataToUpdate() }
+            })
+
+            return UserEntity.fromObject( updatedUser );
+
+        } catch( error ){
+            throw CustomError.internalServer('Internal Server Erorr');
         }
     }
 }
