@@ -14,8 +14,8 @@ datasource db {
 }
 
 model User {
-  
-  id Int @default(autoincrement())
+
+  id Int @id @default(autoincrement())
   username String @unique @db.VarChar(30)
   email String @unique @db.VarChar(30)
   password String @db.VarChar(30)
@@ -24,6 +24,6 @@ model User {
   gender String? @db.VarChar(10)
   isActive Boolean @db.Boolean @default(true)
   createdAt DateTime @db.Timestamp()
-  updatedAt DateTime @db.Timestamp()
+  updatedAt DateTime? @db.Timestamp()
 
 }
