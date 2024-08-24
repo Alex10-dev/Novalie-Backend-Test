@@ -57,4 +57,13 @@ export class UserController {
             .catch( error => CustomError.handleError( error, res ));
 
     }
+
+    public deleteUser = ( req: Request, res: Response ) => {
+
+        const { id } = req.params;
+        this.userService.deleteUser( Number(id) )
+            .then( deletedUser => res.status(200).json( deletedUser ))
+            .catch( error => CustomError.handleError( error, res ));
+
+    }
 }

@@ -98,4 +98,19 @@ export class UserService {
             throw CustomError.internalServer('Internal Server Erorr');
         }
     }
+
+    async deleteUser( userID: number ) {
+        await this.getUserByID( userID );
+
+        try{
+            const deletedUser = await prisma.user.delete({
+                where: { id: userID }
+            });
+
+            return deletedUser;
+
+        } catch( error ) {
+            throw CustomError.internalServer('Internal Server Error');
+        }
+    }
 }
